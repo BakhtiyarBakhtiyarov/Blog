@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserMessagesRequests extends FormRequest
+class UserMessagesRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class UserMessagesRequests extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,7 +25,7 @@ class UserMessagesRequests extends FormRequest
     {
             return [
                 'name'  => 'required',
-                'email'  => 'required|email',
+                'email'  => 'required',
                 'subject'  => 'required',
                 'message'  => 'required|min:20',
                 
