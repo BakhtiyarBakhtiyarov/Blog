@@ -7,11 +7,12 @@ use App\Http\Requests\AboutUpdateRequest;
 use Illuminate\Http\Request;
 use App\Models\About;
 use App\Models\Contact;
+use Illuminate\Support\Str;
 
 
 class AboutController extends Controller
 {
-    public function index($id)
+    public function index()
     {
         $abouts   = About::first();
         $contacts = Contact::first();
@@ -20,11 +21,19 @@ class AboutController extends Controller
 
     public function update(AboutUpdateRequest $request)
     {
-        // $contacts = Contact::first();
+        $about   = About::where('id',1)->first();
+        @unlink(public_path('img/about_images/'. $about->image));
 
-        // @unlink(public_path('admin/img/category_images/'. $contacts->image));
+        if($request->hasFile('abouts_image'))
+        {
+            $image = $request->file('abouts_image');
+            $name = Str::random(16) . '.' . $image->getClientOriginalExtension();
+            $directory = public_path('img/about_images/');
+            $image->move($directory, $name);
+        }
+
         
-        $abouts = About::where('id',$request->id_abouts)->update([
+        $abouts = About::where('id',1)->update([
             'name'             => $request->abouts_name,
             'birthday'         => $request->abouts_birthday,
             'city'             => $request->abouts_city,
@@ -32,10 +41,10 @@ class AboutController extends Controller
             'website'          => $request->abouts_website,
             'interests'        => $request->abouts_interests,
             'degree'           => $request->abouts_degree,
-            'description'      => $request->abouts_description,
+            'description'      => $request->abouts_description
         ]);
 
-        $contacts = Contact::where('id',$request->id_contacts)->update([
+        $contacts = Contact::where('id',1)->update([
             'phone'       => $request->contacts_phone,
             'email'       => $request->contacts_email,
             'address'     => $request->contacts_address,
@@ -49,12 +58,15 @@ class AboutController extends Controller
         
         if ($abouts && $contacts)
         {
-            return redirect()->route('about.index',$abouts->id)->with('success','Melumat ugurla redakte olundu!!!');
+            return redirect()->route('about.index')->with('success','Melumat ugurla redakte olundu!!!');
         }
         else{
-            return redirect()->route('about.index',$abouts->id)->with('errors','Xeta bas verdi!!!');
+            return redirect()->route('about.index')->with('errors','Xeta bas verdi!!!');
         }
     }
+
+    
+
 
 
 }

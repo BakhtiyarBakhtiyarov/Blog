@@ -11,7 +11,7 @@
                         <div class="col-lg-6">
                             <div class="home-content">
                                 <div class="home-image">
-                                    <img src="{{ asset('images/profile_photo.jpeg') }}" alt="" class="wow zoomIn"
+                                    <img src="{{ asset('img/about_images') . '/' . $about->image}}" alt="" class="wow zoomIn"
                                         data-wow-delay="0.2s">
                                 </div>
                                 <div class="home-main-content">

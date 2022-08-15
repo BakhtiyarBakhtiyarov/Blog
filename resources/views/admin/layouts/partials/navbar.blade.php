@@ -32,7 +32,7 @@
         <nav class="sidebar-nav">
             <ul id="sidebarnav">
                 <li>
-                    {{-- <a class="waves-effect waves-dark" href={{ route('about.index',$abouts->id) }} aria-expanded="false"> --}}
+                    <a class="waves-effect waves-dark" href={{ route('about.index') }} aria-expanded="false">
                         <i class="far fa-circle text-danger"></i>
                         <span class="hide-menu">About</span>
                     </a>
@@ -45,14 +45,14 @@
                 </li>
 
                 <li>
-                    <a class="waves-effect waves-dark" href={{ route('resume.index',$resume->id) }} aria-expanded="false">
+                    <a class="waves-effect waves-dark" href={{ route('resume.index') }} aria-expanded="false">
                         <i class="far fa-circle text-info"></i>
                         <span class="hide-menu">Resume</span>
 
                     </a>
                 </li>
                 <li>
-                    <a class="waves-effect waves-dark" href="#" aria-expanded="false">                        <i class="far fa-circle text-success"></i>
+                    <a class="waves-effect waves-dark" href={{ route('logout')}} aria-expanded="false">                        <i class="far fa-circle text-success"></i>
                         <span class="hide-menu">Log Out</span>
                     </a>
                 </li>

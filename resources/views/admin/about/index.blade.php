@@ -3,20 +3,12 @@
     <div class="page-wrapper">
         <div class="col-sm-12">
             <div class="card card-body">
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
+                @if(session('success'))
+                    <div>{{ session('success') }}</div>
                 @endif
                 <h1>About Page</h1>
                 <form method="POST" action="{{ route('about.update') }}" class="form-horizontal mt-4">
                     @csrf
-                    <input type="hidden" value="{{ $abouts->id }}" name="id_abouts">
-                    <input type="hidden" value="{{ $contacts->id }}" name="id_contacts">
                     <div class="form-group" style="width: 50%">
                         <label>Name</label>
                         <input value="{{ $abouts->name }}" type="text" class="form-control" name="abouts_name">
@@ -80,6 +72,14 @@
                     <div class="form-group" style="width: 50%">
                         <label>Description</label>
                         <textarea class="form-control" id="exampleTextarea" rows="3" name="abouts_description">{{$abouts->description}}</textarea>
+                    </div>
+
+                    <div class="custom-file" style="width: 50%">
+                        <label class="custom-file-label" for="inputGroupFile01">Profile Photo Choose</label>
+                        <input type="file" class="custom-file-input" id="inputGroupFile01" name="abouts_image" value="abouts_image">
+                        <p>Image now:</p>
+                        <img style="width: 120px" src="{{ asset('img/about_images') . '/' . $abouts->image}}" alt="">
+
                     </div>
 
 

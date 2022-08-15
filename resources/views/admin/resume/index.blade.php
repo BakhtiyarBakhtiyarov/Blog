@@ -1,72 +1,108 @@
 @extends('admin.layouts.master')
+@section('css')
+@stop
 @section('content')
     <div class="page-wrapper">
-        <div class="col-sm-12">
-            <div class="card card-body">
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-                <h1>Resume Page</h1>
-                <form method="POST" action="{{ route('resume.update') }}" class="form-horizontal mt-4">
-                    @csrf
-                    
-                @foreach ($resume as $resume )
-                    <input type="hidden" value="{{ $resume->id }}" name="id_abouts">
-                    <div class="form-group" style="width: 50%">
-                        <label>Resume Type</label>
-                        <select class="custom-select col-12" id="inlineFormCustomSelect" name="resume_resume_type">
-                            <option selected disabled>Choose Resume Type</option>
-                            <option value=" {{$resume->resume_type }}" @if ($resume->resume_type == 1) selected @endif >Education</option>
-                            <option value=" {{$resume->resume_type }}" @if ($resume->resume_type == 2) selected @endif>Experience</option>
-                        </select>
-                    </div>
-                    <div class="form-group" style="width: 50%">
-                        <label>Start Date</label>
-                        <input value="{{ $resume->start_date }}" type="text" class="form-control" name="resume_start_date">
-                    </div>
-                    <div class="form-group" style="width: 50%">
-                        <label>End Date</label>
-                        <input value="{{ $resume->end_date }}" type="text" class="form-control" name="resume_end_date">
-                    </div>
-                    <div class="form-group" style="width: 50%">
-                        <label>Title</label>
-                        <input value="{{ $resume->title }}" type="text" class="form-control" name="resume_title">
-                    </div>
-                    <div class="form-group" style="width: 50%">
-                        <label>Description</label>
-                        <textarea class="form-control" id="exampleTextarea" rows="3" name="resume_description">{{$resume->description}}</textarea>
-                    </div>
-                    <br>
-                    <hr>
-                    
-                @endforeach
-                    
-                   
-                    
-                               
-                    
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4 class="card-title">Resume Table </h4>
+                        </div>
+                        <div class="col-md-6" style="text-align: right">
+                            @if (session('success'))
+                                <div>{{ session('success') }}</div>
+                            @endif
 
-
-                    {{-- <div class="custom-file" style="width: 50%">
-                        <label class="custom-file-label" for="inputGroupFile01">Choose files</label>
-                        <input type="file" class="custom-file-input" id="inputGroupFile01" name="category_icon" value="category_icon">
-                        <p>Image now:</p>
-                        <img style="width: 80px" src="{{ asset('img/category_images') . '/' . $category->icon}}" alt="">
-
-                    </div> --}}
-
-                    <div class="button-group" style="margin-left: 450px; padding-top: 20px">
-                        <button type="submit" class="btn waves-effect waves-light btn-success">Update About</button>
+                            <a href="{{ route('resume.create') }}" type="button"
+                                class="btn waves-effect waves-light btn-success">Add Resume</a>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Type</th>
+                                        <th>Title</th>
+                                        <th>Description</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>Edit</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($resume as $resume)
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>
+                                                @if ($resume->resume_type == 1)
+                                                    Education
+                                                @elseif ($resume->resume_type == 2)
+                                                    Experience
+                                                @endif
+                                            </td>
+                                            <td>{{ $resume->title }}</td>
+                                            <td>{{ $resume->description }}</td>
+                                            <td>{{ $resume->start_date }}</td>
+                                            <td>{{ $resume->end_date }}</td>
+                                            <td> <a href="{{ route('resume.edit', $resume->id) }}"
+                                                    class="btn waves-effect waves-light btn-warning">Edit</a></td>
+                                            <td> <button onclick="ResumeDelete('{{ $resume->id }}')" type="button"
+                                                    class="btn waves-effect waves-light btn-danger">Delete</button></td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-
-                </form>
+                </div>
             </div>
         </div>
     </div>
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <script>
+        function ResumeDelete(id) {
+            swal({
+                    title: "Warning",
+                    text: "Are you sure?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                    buttons: ["No", "Yes"],
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        $.ajax({
+                            url: "{{ route('resume.delete') }}",
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                                id: id
+                            },
+                            method: "POST",
+                            success: function(data) {
+                                if (data === "ok") {
+                                    swal("Success!", "Resume deleted!", "success");
+                                    window.setTimeout(function() {
+                                        location.reload()
+                                    }, 2000)
+                                } else {
+                                    swal("Error!", "Resume didn't deleted!", "error");
+                                }
+                            },
+                            error: function(x, sts) {
+                                console.log("Error...");
+                                console.log('no');
+                            },
+                        });
+                    } else {
+                        swal("Cancelled!");
+                    }
+                });
+        }
+    </script>
+
 @endsection

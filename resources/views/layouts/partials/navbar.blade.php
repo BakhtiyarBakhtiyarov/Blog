@@ -1,7 +1,7 @@
 <div class="side-menu">
     <div class="heading-area">
         <a href="index.html" class="profile-photo"  >
-            <img src="{{asset('images/profile_photo.jpeg')}}" alt="" class="wow zoomIn" data-wow-delay="0.2s">
+            <img src="{{ asset('img/about_images') . '/' . $about->image}}" alt="" class="wow zoomIn" data-wow-delay="0.2s">
         </a>
         <div class="name wow fadeInUp" data-wow-delay="0.3s">
                 Bakhtiyar Bakhtiyarov
